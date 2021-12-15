@@ -1,0 +1,8 @@
+kubeconfig_eks-dev
+terraform.tfstate
+terraform.tfstate.backup
+.idea/*
+.terraform.lock.hcl
+**/.terraform/*
+**/backend.tf
+.idea

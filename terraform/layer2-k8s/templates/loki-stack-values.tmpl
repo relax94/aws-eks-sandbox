@@ -1,0 +1,115 @@
+loki:
+  enabled: true
+  config:
+    limits_config:
+      enforce_metric_name: false
+      reject_old_samples: true
+      reject_old_samples_max_age: 168h
+
+  persistence:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+
+  serviceMonitor:
+    enabled: true
+    interval: ""
+    annotations: {}
+    scrapeTimeout: 10s
+
+  nodeSelector:
+    eks.amazonaws.com/capacityType: ON_DEMAND
+
+promtail:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    interval: ""
+    annotations: {}
+    # scrapeTimeout: 10s
+  tolerations:
+    - effect: NoSchedule
+      operator: Exists
+
+fluent-bit:
+  enabled: false
+
+grafana:
+  enabled: false
+  sidecar:
+    datasources:
+      enabled: true
+  image:
+    tag: 7.2.1
+
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    path: /
+    hosts:
+      - ${grafana_domain_name}
+    tls:
+    - hosts:
+      - ${grafana_domain_name}
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: eks.amazonaws.com/capacityType
+            operator: In
+            values:
+              - SPOT
+
+  persistence:
+    type: pvc
+    enabled: true
+    # storageClassName: default
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+
+  adminUser: admin
+  adminPassword: "${grafana_password}"
+
+  env:
+    # all values must be quoted
+    GF_SERVER_ROOT_URL: "https://${grafana_domain_name}/grafana"
+    GF_SERVER_SERVE_FROM_SUB_PATH: "true"
+    GF_USERS_ALLOW_SIGN_UP: "false"
+    GF_SECURITY_ADMIN_USER: "admin"
+    GF_SECURITY_ADMIN_PASSWORD: "admin"
+
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+      - name: Loki
+        type: loki
+        url: http://loki-stack:3100
+        jsonData:
+          maxLines: 1000
+
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+      - name: 'logs'
+        orgId: 1
+        folder: 'logs'
+        type: file
+        disableDeletion: true
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/logs
+
+  dashboards:
+    logs:
+      logs:
+        ## Dashboard for quick search application logs for loki with two datasources loki and prometheus - https://grafana.com/grafana/dashboards/12019
+        url: https://s3.amazonaws.com/grafana-dashboards.maddevs.org/common/aws-eks-base/loki-dashboard-quick-search.json
+

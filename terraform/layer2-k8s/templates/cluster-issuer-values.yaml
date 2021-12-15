@@ -1,0 +1,3 @@
+dnsZone: ${zone}
+region: ${region}
+email: webmaster@${zone}
