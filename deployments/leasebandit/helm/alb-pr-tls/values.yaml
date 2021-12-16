@@ -1,0 +1,9 @@
+image:
+  repository: "repo.io/example"
+  tag: "latest"
+
+ingress:
+  domain:
+    base: "leasebandit.link"
+    prefix: ""
+    suffix: ""

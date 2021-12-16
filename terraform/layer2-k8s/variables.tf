@@ -11,7 +11,7 @@ variable "remote_state_key" {
 
 variable "region" {
   type        = string
-  default     = "us-east-1"
+  default     = "us-east-2"
   description = "Default infrastructure region"
 }
 

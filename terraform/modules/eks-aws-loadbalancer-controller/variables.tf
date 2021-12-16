@@ -31,7 +31,7 @@ variable "repository" {
 variable "chart_version" {
   description = "Chart version repository name"
   type        = string
-  default     = "1.2.6"
+  default     = "1.3.3"
 }
 variable "namespace" {
   description = "Name of kubernetes namespace for alb_ingres"
@@ -63,7 +63,7 @@ variable "vpc_id" {
 variable "image_tag" {
   description = "chart version alb ingress"
   type        = string
-  default     = "v2.2.3"
+  default     = "v2.3.1"
 }
 
 variable "replica_count" {

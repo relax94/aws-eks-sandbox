@@ -21,7 +21,7 @@ data "terraform_remote_state" "layer1-aws" {
   config = {
     bucket  = var.remote_state_bucket
     key     = "${var.remote_state_key}/terraform.tfstate"
-    region  = "us-east-1"
+    region  = "us-east-2"
     encrypt = "true"
   }
   workspace = terraform.workspace
