@@ -1,6 +1,6 @@
 locals{
   remote_state_bucket = "${get_env("TF_REMOTE_STATE_BUCKET")}"
-  region              = "${get_env("TF_REGION", "us-east-1")}"
+  region              = "${get_env("TF_REGION", "us-east-2")}"
   project_name = "munich"
 }
 
@@ -25,5 +25,5 @@ remote_state {
   }
 }
 
-terragrunt_version_constraint = "0.35.3"
+terragrunt_version_constraint = "0.35.13"
 

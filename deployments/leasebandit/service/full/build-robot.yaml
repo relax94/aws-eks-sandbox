@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: build-robot
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: manage-namespaces
+rules:
+  - apiGroups: [ "apps" ]
+    resources: [ "deployments" ]
+    verbs: [ "list", "get", "watch", "create", "update", "patch" ]
+  - apiGroups: [ "" ]
+    resources: [ "pods", "services", "namespaces" ]
+    verbs: [ "list", "get", "watch", "create", "update", "patch" ]
+  - apiGroups: [ "networking.istio.io" ]
+    resources: [ "virtualservices" ]
+    verbs: [ "list", "get", "watch", "create", "update", "patch" ]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/name: build-robot
+  name: build-robot
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: manage-namespaces
+subjects:
+  - kind: ServiceAccount
+    name: build-robot
+    namespace: default

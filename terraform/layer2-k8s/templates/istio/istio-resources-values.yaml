@@ -3,9 +3,9 @@ istioOperator:
     ingressGateways:
     - name: istio-ingressgateway
       enabled: true
-#      k8s:
-#        serviceAnnotations:
-#          #service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+      k8s:
+        serviceAnnotations:
+          service.beta.kubernetes.io/aws-load-balancer-internal: "true"
 #        service:
 #          ports:
 #            - port: 15021

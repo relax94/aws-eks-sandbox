@@ -8,7 +8,7 @@
 ##########
 # Network
 ##########
-region   = "us-east-1"
+region   = "us-east-2"
 az_count = 2
 allowed_ips = [
   "0.0.0.0/0"

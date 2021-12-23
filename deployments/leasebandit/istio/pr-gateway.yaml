@@ -1,0 +1,56 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: pr-8466-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 443
+        name: https-443
+        protocol: HTTPS
+      tls:
+        mode: SIMPLE
+        credentialName: "leasebandit-tls-secret"
+      hosts:
+        - "8466.pr.leasebandit.link"
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: pr-8466-entry
+spec:
+  hosts:
+    - "8466.pr.leasebandit.link"
+  gateways:
+    - pr-8466-gateway
+  http:
+    - route:
+        - destination:
+            host: frontend
+            port:
+              number: 80
+      match:
+        - uri:
+            prefix: /
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Sidecar
+metadata:
+  name: default
+spec:
+  outboundTrafficPolicy:
+    mode: ALLOW_ANY
+
+---
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: default
+spec:
+  meshConfig:
+    defaultConfig:
+      tracing:
+        sampling: 50
